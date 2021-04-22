@@ -15,6 +15,7 @@
   <image source="../images/goomba.png" width="128" height="96"/>
  </tileset>
  <tileset firstgid="57" source="Bloopa.tsx"/>
+ <tileset firstgid="59" source="piranha.tsx"/>
  <group id="7" name="Fondo" locked="1">
   <imagelayer id="6" name="Copiar desde background2" locked="1" offsetx="1601.33" offsety="1.33333">
    <image source="../images/bg.png" width="800" height="600"/>
@@ -717,7 +718,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="59"/>
    <tile/>
    <tile/>
    <tile/>
@@ -777,7 +778,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="60"/>
    <tile/>
    <tile/>
    <tile/>
