@@ -1,0 +1,8 @@
+
+/////// Decorados ///////
+Tuberías
+Bloques misteriosos de objetos
+
+
+////// Colisión ////////
+Bloques de suelo
