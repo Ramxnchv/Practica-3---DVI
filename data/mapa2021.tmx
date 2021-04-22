@@ -16,6 +16,7 @@
  </tileset>
  <tileset firstgid="57" source="Bloopa.tsx"/>
  <tileset firstgid="59" source="piranha.tsx"/>
+ <tileset firstgid="61" source="agua.tsx"/>
  <group id="7" name="Fondo" locked="1">
   <imagelayer id="6" name="Copiar desde background2" locked="1" offsetx="1601.33" offsety="1.33333">
    <image source="../images/bg.png" width="800" height="600"/>
@@ -962,9 +963,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="15"/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="57"/>
    <tile/>
    <tile/>
    <tile/>
@@ -1023,11 +1024,11 @@
    <tile gid="15"/>
    <tile gid="15"/>
    <tile gid="15"/>
-   <tile/>
-   <tile gid="57"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="61"/>
+   <tile gid="62"/>
+   <tile gid="63"/>
+   <tile gid="64"/>
+   <tile gid="65"/>
    <tile gid="15"/>
    <tile gid="15"/>
    <tile gid="15"/>
@@ -1083,11 +1084,11 @@
    <tile gid="15"/>
    <tile gid="15"/>
    <tile gid="15"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="77"/>
+   <tile gid="77"/>
+   <tile gid="77"/>
+   <tile gid="77"/>
+   <tile gid="77"/>
    <tile gid="15"/>
    <tile gid="15"/>
    <tile gid="15"/>
