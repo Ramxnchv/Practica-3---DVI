@@ -18,8 +18,9 @@ var game = function() {
         x:100,
         y:100,
         frame: 0,
-        scale: 1.5
-        //gravityY: 0.5
+        scale: 1.5,
+        gravityY: 500
+
         });
         this.add("2d , platformerControls, animation, tween, dancer");
         Q.input.on("up", this, function(){
@@ -32,20 +33,25 @@ var game = function() {
 
       step: function(dt){
         if(this.p.vx > 0){
-            this.play("walk_right");
-          } else if(this.p.vx < 0){
-            this.play("walk_left");
-          }
+          this.play("walk_right");
+        } else if(this.p.vx < 0){
+          this.play("walk_left");
+        }
 
-          if(this.p.vy < 0){
-            if(this.p.vx < 0)
-              this.play("jump_left");
+        if(this.p.vy < 0){
+          if(this.p.vx < 0)
+            this.play("jump_left");
+          else if(this.p.vx > 0)
+            this.play("jump_right");
+        }
 
-            else if(this.p.vx > 0)
-              this.play("jump_right");
-
-          }
+        if(this.p.y > 700){
+          this.p.y = 100;
+          this.p.x = 100;
+          this.die();
+        }
       },
+
       die: function(){
         Q.state.dec("lives", 1);
         if(Q.state.get("lives") < 0){
