@@ -46,7 +46,7 @@ Al cargar el primer nivel comienza a reproducirse en bucle la musica del juego, 
 
 ### Vidas
 
-El jugador empieza con 2 vidas, las cuales se incrementarán en el caso de recoger las setas que se encuentran a lo largo del mapa. La partida se acabará cuando se quede sin vidas al colisionar con los enemigos que hay distribuidos por el mapa.
+El jugador empieza con 2 vidas, las cuales se incrementarán en el caso de recoger las setas que se encuentran a lo largo del mapa. La partida se acabará cuando se quede sin vidas al colisionar con los enemigos o al caer por los huecos distribuidos por el mapa.
 
 ### Puntuación
 
