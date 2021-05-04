@@ -18,7 +18,7 @@ var game = function() {
         x:100,
         y:100,
         frame: 0,
-        scale: 1.5,
+        scale: 1,
         gravityY: 550
         });
         this.add("2d , platformerControls, animation, tween, dancer");
@@ -64,13 +64,13 @@ var game = function() {
       },
       movFin: function () {
         Q.audio.stop();
-        Q.audio.play('music_level_complete.ogg', { debounce: 10000 });
+        Q.audio.play('music_level_complete.mp3', { debounce: 10000 });
         this.del("platformerControls");
         this.add("aiMario");
         this.p.vx = 80;
       },
       goDown: function (destX, destY) {
-        Q.audio.play('down_pipe.ogg', { debounce: 100 });
+        Q.audio.play('down_pipe.mp3', { debounce: 100 });
         this.p.x = destX;
         this.p.y = destY;
       }
@@ -242,33 +242,58 @@ var game = function() {
     }
     });
 
-    Q.Sprite.extend("Flag",{ 
-      init: function(p) { 
-          this._super(p, { 
-              asset: "flag.png",
-              goDown:false,
-              limInf:0,
-              gravity:0,
-              vy:0
-          });
-          this.add("2d");
-          this.on("bump.top,bump.left,bump.down",this,"captura");
+    //Princesa
+    Q.Sprite.extend("Princess", {
+      init: function(p) {
+        this._super(p,{
+        sheet: "princess",
+        x:400+(Math.random()*200),
+        y:250,
+        frame: 0,
+        });
+        this.add("2d, aiBounce, animation");
+        this.on("bump.top, bump.bottom, bump.left, bump.right", this, "besito");
       },
-      step:function(){
-          if(this.p.goDown && this.p.y<this.p.limInf){
-                  this.p.y+=5;
-          }   
+      besito: function(collision){
+        if(!collision.obj.isA("Mario")) return;
+        Q.stageScene("winGame", 2);
+        Q.audio.stop();
+        Q.audio.play('music_level_complete.mp3');
+        collision.obj.destroy();
+        this.destroy();
       },
-      captura:function(collision){
-          this.del("2d");
-          this.p.goDown=true;
-          collision.obj.p.bandera=true;
-          Q.state.inc("score",Q.state.get("valBandera"));
-          collision.obj.movFin();
-      }
-  });
+    });
+
+    //Caja misteriosa
+    /*
+    Q.Sprite.extend("MisteryBox", {
+      init: function(p) {
+        this._super(p,{
+        sheet: "tiles",
+        frame: 0,
+        gravity: 10,
+        taken: false
+        });
+        this.add("2d, aiBounce, animation");
+        this.play("bloopa");
+        this.on("bump.bottom", this, "dameMoneda");
+
+      },
+      dameMoneda: function(collision){
+        if(!collision.obj.isA("Mario")) return;
+        if(taken) return;
+        collision.obj.p.vy = -200;
+        console.log("Toma una moneda mas");
+        Q.state.inc("score", 10);
+        Q.state.inc("coins", 1);
+        Q.audio.play("coin.mp3");
+
+      },
+    });
+
+*/
     
-    Q.load(["mario_small.png" , "mario_small.json" , "1up.png", "bg.png", "mapa.tmx", "tiles.png", "goomba.png", "goomba.json", "music_main.mp3", "title-screen.png", "music_die.mp3", "1up.mp3", "kill_enemy.mp3", "jump_small.mp3", "coin.png", "coin.json", "coin.mp3", "bloopa.png", "bloopa.json"], 
+    Q.load(["mario_small.png" , "mario_small.json" , "1up.png", "bg.png", "mapa.tmx", "tiles.png", "goomba.png", "goomba.json", "music_main.mp3", "title-screen.png", "music_die.mp3", "1up.mp3", "kill_enemy.mp3", "jump_small.mp3", "coin.png", "coin.json", "coin.mp3", "bloopa.png", "bloopa.json", "princess.png", "music_level_complete.mp3"], 
     function(){
     
       Q.compileSheets("mario_small.png", "mario_small.json" );
@@ -376,6 +401,27 @@ var game = function() {
         }));
         var label = container.insert(new Q.UI.Text({
           x:10, y: -10 - button2.p.h, label: "You Lose!"
+        }));
+        // When the button is clicked, clear all the stages
+        // and restart the game.
+        button2.on("click",function() {
+          Q.clearStages();
+          Q.stageScene('mainTitle');
+        });
+        // Expand the container to visibly fit it's contents
+        // (with a padding of 20 pixels)
+        container.fit(20);
+      });
+
+      Q.scene('winGame',function(stage) {
+        var container = stage.insert(new Q.UI.Container({
+          x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
+        }));
+        var button2 = container.insert(new Q.UI.Button({
+          x: 0, y: 0, fill: "#CCCCCC", label: "Play Again"
+        }));
+        var label = container.insert(new Q.UI.Text({
+          x:10, y: -10 - button2.p.h, label: "You Won!"
         }));
         // When the button is clicked, clear all the stages
         // and restart the game.
