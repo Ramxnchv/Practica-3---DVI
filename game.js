@@ -45,6 +45,12 @@ var game = function() {
               this.play("jump_right");
 
           }
+
+          if(this.p.y > 700){
+            this.p.y = 100;
+            this.p.x = 100;
+            this.die();
+          }
       },
       die: function(){
 
@@ -129,7 +135,7 @@ var game = function() {
         Q.state.inc("score", 10);
         Q.state.inc("coins", 1);
         this.countCoins();
-        this.animate({y:this.p.y - 50, angle: 360}, 0.5, Q.Easing.Quadratic.In, {callback: function(){this.destroy();}});
+        this.animate({y:this.p.y - 50, angle: 0}, 0.5, Q.Easing.Quadratic.In, {callback: function(){this.destroy();}});
       },
       countCoins:function(){
         if( Q.state.get("coins")=== Q.state.get("coins1Up")){
@@ -173,7 +179,9 @@ var game = function() {
         });
         this.add("2d, aiBounce, animation");
         this.on("bump.top", this, "onTop");
-         this.on("bump.bottom, bump.left, bump.right", this, "kill");
+        this.on("bump.bottom, bump.left, bump.right", this, "kill");
+        
+
       },
       onTop: function(collision){
         if(!collision.obj.isA("Mario")) return;
@@ -198,13 +206,14 @@ var game = function() {
         sheet: "bloopa",
         sprite: "Bloopa",
         frame: 0,
-        vy: 100,
-        gravity:0
+        vy: -100,
+        gravity: 10
         });
         this.add("2d, aiBounce, animation");
         this.play("bloopa");
         this.on("bump.top", this, "onTop");
-         this.on("bump.bottom, bump.left, bump.right", this, "kill");
+        this.on("bump.bottom, bump.left, bump.right", this, "kill");
+
       },
       onTop: function(collision){
         if(!collision.obj.isA("Mario")) return;
@@ -222,6 +231,9 @@ var game = function() {
         collision.obj.die();
       },
       step:function(){
+        if(this.p.y > 700 ){
+          //this.p.vy = 500;
+        }
         if(this.die) 
             this.muerteCont++;
         if(this.muerteCont===15) this.play("bloopaDieStop");
