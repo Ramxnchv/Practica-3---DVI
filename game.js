@@ -55,6 +55,18 @@ var game = function() {
           Q.audio.play("music_die.mp3");
           Q.stageScene("endGame", 2);
         }
+      },
+      movFin: function () {
+        Q.audio.stop();
+        Q.audio.play('music_level_complete.ogg', { debounce: 10000 });
+        this.del("platformerControls");
+        this.add("aiMario");
+        this.p.vx = 80;
+      },
+      goDown: function (destX, destY) {
+        Q.audio.play('down_pipe.ogg', { debounce: 100 });
+        this.p.x = destX;
+        this.p.y = destY;
       }
     });
 
@@ -189,7 +201,7 @@ var game = function() {
         vy: 100,
         gravity:0
         });
-        this.add("2d, aiBounce2, animation");
+        this.add("2d, aiBounce, animation");
         this.play("bloopa");
         this.on("bump.top", this, "onTop");
          this.on("bump.bottom, bump.left, bump.right", this, "kill");
@@ -217,6 +229,32 @@ var game = function() {
             this.destroy();
     }
     });
+
+    Q.Sprite.extend("Flag",{ 
+      init: function(p) { 
+          this._super(p, { 
+              asset: "flag.png",
+              goDown:false,
+              limInf:0,
+              gravity:0,
+              vy:0
+          });
+          this.add("2d");
+          this.on("bump.top,bump.left,bump.down",this,"captura");
+      },
+      step:function(){
+          if(this.p.goDown && this.p.y<this.p.limInf){
+                  this.p.y+=5;
+          }   
+      },
+      captura:function(collision){
+          this.del("2d");
+          this.p.goDown=true;
+          collision.obj.p.bandera=true;
+          Q.state.inc("score",Q.state.get("valBandera"));
+          collision.obj.movFin();
+      }
+  });
     
     Q.load(["mario_small.png" , "mario_small.json" , "1up.png", "bg.png", "mapa.tmx", "tiles.png", "goomba.png", "goomba.json", "music_main.mp3", "title-screen.png", "music_die.mp3", "1up.mp3", "kill_enemy.mp3", "jump_small.mp3", "coin.png", "coin.json", "coin.mp3", "bloopa.png", "bloopa.json"], 
     function(){
