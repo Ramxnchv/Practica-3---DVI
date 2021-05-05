@@ -1,5 +1,10 @@
 Practica 3 - DVI
 
+Pedro Martínez Gamero
+Ramon Rosa Pérez
+Victor Velázquez Cabrera
+Eva Verdú Rodríguez
+
 # Mecanicas implementadas
 
 ## Mario en escena

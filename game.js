@@ -9,7 +9,10 @@ var game = function() {
             })
             .controls().controls().enableSound().touch();
     
-    
+    ///////////////////////////////////////////////////////
+    //Jugador Mario
+    ///////////////////////////////////////////////////////
+
     Q.Sprite.extend("Mario", {
       init: function(p) {
         this._super(p,{
@@ -23,9 +26,11 @@ var game = function() {
         });
         this.add("2d , platformerControls, animation, tween, dancer");
         Q.input.on("up", this, function(){
+
           if (this.p.vy == 0){
-                  Q.audio.play("jump_small.mp3"); 
-              }
+            Q.audio.play("jump_small.mp3"); 
+          }
+
         });
         Q.input.on("fire", this, "dance");
       },
@@ -53,7 +58,6 @@ var game = function() {
           }
       },
       die: function(){
-
         Q.state.dec("lives", 1);
         if(Q.state.get("lives") < 0){
           this.destroy();
@@ -76,7 +80,9 @@ var game = function() {
       }
     });
 
-
+    ///////////////////////////////////////////////////////
+    //Vidas
+    ///////////////////////////////////////////////////////
     
     Q.Sprite.extend("OneUp", {
       init: function(p) {
@@ -106,7 +112,10 @@ var game = function() {
     
     });
 
+    ///////////////////////////////////////////////////////
     //Monedas
+    ///////////////////////////////////////////////////////
+
     Q.Sprite.extend("Coin", {
       init: function(p) {
         this._super(p,{
@@ -135,7 +144,7 @@ var game = function() {
         Q.state.inc("score", 10);
         Q.state.inc("coins", 1);
         this.countCoins();
-        this.animate({y:this.p.y - 50, angle: 0}, 0.5, Q.Easing.Quadratic.In, {callback: function(){this.destroy();}});
+        this.animate({y:this.p.y - 50, angle: 0}, 0.2, Q.Easing.Quadratic.In, {callback: function(){this.destroy();}});
       },
       countCoins:function(){
         if( Q.state.get("coins")=== Q.state.get("coins1Up")){
@@ -147,37 +156,22 @@ var game = function() {
     
     });
 
-    //Bandera
-    Q.Sprite.extend("Flag", {
-      init: function(p) {
-        this._super(p,{
-        asset: "flag.png",
-        sensor: true,
-        });
-        this.on("sensor", this, "hit");
-        this.add("tween");
-      },
-      win: function(collision){
-        if(!collision.isA("Mario")) return;
-        console.log(Q.state.get("Has tocado la bandera"));
-        Q.audio.play("flagpole_slide.mp3");
-        //this.animate({y:this.p.y - 50, angle: 360}, 0.5, Q.Easing.Quadratic.In, {callback: function(){this.destroy();}});
-        collision.obj.die();
-      }
-    
-    });
+    ///////////////////////////////////////////////////////
+    //Enemigo GOOMBA
+    ///////////////////////////////////////////////////////
 
-    
     Q.Sprite.extend("Goomba", {
       init: function(p) {
         this._super(p,{
         sheet: "goomba",
+        sprite: "Goomba_anim",
         x:400+(Math.random()*200),
         y:250,
         frame: 0,
         vx: 100,
         });
         this.add("2d, aiBounce, animation");
+        this.play("goomba");
         this.on("bump.top", this, "onTop");
         this.on("bump.bottom, bump.left, bump.right", this, "kill");
         
@@ -200,14 +194,17 @@ var game = function() {
       }
     });
 
+    ///////////////////////////////////////////////////////
+    // Enemigos Bloopa
+    ///////////////////////////////////////////////////////
+
     Q.Sprite.extend("Bloopa", {
       init: function(p) {
         this._super(p,{
         sheet: "bloopa",
         sprite: "Bloopa",
         frame: 0,
-        vy: -100,
-        gravity: 10
+        gravity: 0.1
         });
         this.add("2d, aiBounce, animation");
         this.play("bloopa");
@@ -230,9 +227,9 @@ var game = function() {
         collision.obj.p.x += collision.normalX*-5;
         collision.obj.die();
       },
-      step:function(){
-        if(this.p.y > 700 ){
-          //this.p.vy = 500;
+      step:function(dt){
+         if (this.p.vy==0) {
+          this.p.vy = -150;
         }
         if(this.die) 
             this.muerteCont++;
@@ -242,7 +239,10 @@ var game = function() {
     }
     });
 
+    ///////////////////////////////////////////////////////
     //Princesa
+    ///////////////////////////////////////////////////////
+
     Q.Sprite.extend("Princess", {
       init: function(p) {
         this._super(p,{
@@ -321,7 +321,7 @@ var game = function() {
         coin: { frames: [0,1,2], rate: 1/2}
       });
 
-      Q.animations('Goomba', {
+      Q.animations('Goomba_anim', {
         goomba: { frames: [0,1], rate: 1/3},
         goombaDie: { frames: [1,2,3], rate: 1/3}
       });
@@ -333,18 +333,14 @@ var game = function() {
     });
 
       Q.scene("level1", function(stage){
-        /*
-        stage.insert(new Q.Repeater(
-          {asset: "bg.png", speedX: 0.5, speedY: 0.5})
-        );
-        */
+        
         Q.stageTMX("mapa.tmx", stage);
 
         mario = new Q.Mario();
         stage.insert(mario);
 
         stage.add("viewport").follow(mario, {x:true , y:false});
-        stage.viewport.scale = .75;
+        stage.viewport.scale = 1;
         stage.viewport.offsetX = -200;
 
         stage.on("destroy", function(){
@@ -364,7 +360,6 @@ var game = function() {
         Q.state.on("change.lives", this, function(){
           label_lives.p.label = "Lives: " + Q.state.get("lives");
         });
-        /*Hola, lo mismo la lio asi que mi codigo espagueti empieza desde aqui*/
         label_coins = new Q.UI.Text({x:400, y:0, label: "Coins: 0"});
         stage.insert(label_coins);
         Q.state.on("change.coins", this, function(){
@@ -402,14 +397,10 @@ var game = function() {
         var label = container.insert(new Q.UI.Text({
           x:10, y: -10 - button2.p.h, label: "You Lose!"
         }));
-        // When the button is clicked, clear all the stages
-        // and restart the game.
         button2.on("click",function() {
           Q.clearStages();
           Q.stageScene('mainTitle');
         });
-        // Expand the container to visibly fit it's contents
-        // (with a padding of 20 pixels)
         container.fit(20);
       });
 
@@ -423,14 +414,10 @@ var game = function() {
         var label = container.insert(new Q.UI.Text({
           x:10, y: -10 - button2.p.h, label: "You Won!"
         }));
-        // When the button is clicked, clear all the stages
-        // and restart the game.
         button2.on("click",function() {
           Q.clearStages();
           Q.stageScene('mainTitle');
         });
-        // Expand the container to visibly fit it's contents
-        // (with a padding of 20 pixels)
         container.fit(20);
       });
 
