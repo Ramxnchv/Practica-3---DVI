@@ -1,9 +1,11 @@
 Practica 3 - DVI
 
-Pedro Martínez Gamero
-Ramon Rosa Pérez
-Victor Velázquez Cabrera
-Eva Verdú Rodríguez
+# Miembros del grupo
+
+* Pedro Martínez Gamero
+* Ramon Rosa Pérez
+* Victor Velázquez Cabrera
+* Eva Verdú Rodríguez
 
 # Mecanicas implementadas
 
@@ -25,7 +27,7 @@ Al quedarse sin vidas Mario se muestra una ventana de Game Over, con la posibili
 
 ## Fin del juego al ganar
 
-
+Al colisionar con la princesa, se muestra una ventana de final del juego, con la posibilidad de volver a empezar de nuevo.
 
 ## Pantalla de inicio
 
@@ -38,10 +40,6 @@ Las animaciones añadidas son el movimiento y salto de Mario, el coger las vidas
 ## Monedas
 
 Las monedas, al colisionar con Mario desaparecen e incrementan el contador de monedas y de puntuación que se encuentran en el hud.
-
-## Componente para los enemigos
-
-
 
 ## Sonidos
 
